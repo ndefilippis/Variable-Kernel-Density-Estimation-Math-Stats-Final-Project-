@@ -87,7 +87,7 @@ a more complicated dependence on $h$. Abramson's estimator is a sample smoothing
 \end{equation}
 for some $h>0$. This choice kills the asymptotic bias \eqref{eq:ss-bias} when $p=2$. 
 
-To investigate the mean-squared error (MSE), the authors analyze a special case where $X_1, \dots, X_n \sim \mathcal{N}(0,1)$ and $K$ the uniform kernel on $[-1,1]$, focusing on the MSE evaluated at $y=0$. In this case, the Abramson estimator has mean 
+To investigate the mean-squared error (MSE), the authors analyze a special case where $X_1, \dots, X_n \sim \mathcal{N}(0,1)$ and $K$ the uniform kernel on $[-1,1]$, focusing on the MSE evaluated at $y=0$, which we abbreviate by MSE(0). In this case, the Abramson estimator has mean 
 \begin{equation}\label{eq:ss-ex-mean}
     \E \hat{f}(0) = \int \frac{\phi(x)}{h} K\left(\frac{x\sqrt{\phi(x)}}{h}\right) \phi(x)\dd{x}
 \end{equation}
@@ -95,7 +95,9 @@ at $y=0$. Here, $\phi$ is the standard normal density. Because $K$ is supported 
 \begin{equation}\label{eq:ss-ex-dom}
     \left\{x \in \R : \abs{\frac{x\sqrt{\phi(x)}}{h}} \leq 1\right\}.
 \end{equation}
-For sufficiently large $h$, however, this set is equal to $\R$. For other $h$, this set is of the form $(-\infty,-b) \cup (-a,a) \cup(b,\infty)$. Prior analysis only considered the contribution of $(-a,a)$ to the integral. This eventually leads to a squared bias term that is $O\left(h^4\right)$ and an expected MSE convergence rate that is $O\left(n^{-8/9}\right)$. However, there are significant tail contributions to \eqref{eq:ss-ex-mean} which are detailed in \cite{vkde}. These lead to a squared bias term that is actually $O\left(\left(h / \log h\right)^4\right)$
+For sufficiently large $h$, however, this set is equal to $\R$. For other $h$, this set is of the form $(-\infty,-b) \cup (-a,a) \cup(b,\infty)$. Prior analysis only considered the contribution of $(-a,a)$ to the integral. This eventually leads to a squared bias term that is $O\left(h^4\right)$ and an optimal MSE(0) convergence rate that is $O\left(n^{-8/9}\right)$. However, there are significant tail contributions to \eqref{eq:ss-ex-mean} which are detailed in \cite{vkde}. These lead to a squared bias term that is actually $O\left(\left(h / \log h\right)^4\right)$, which actually converges to zero faster as $h \to 0$ and leads to an optimal MSE(0) convergence rate that is asymptotically $O\left(n^{-4/5}\right)$. The authors also consider the non-asymptotic regime, i.e., the regime where the number of samples is less than 500. In this case, it as actually possible to find an $h$ that kills the squared bias term. Because of this, the authors put forth two optimal values of $h$ for the asymptotic and non-asymptotic regimes and suggest, by means of a numerical experiment involving $n=10^3$ samples, that the non-asymptotic $h$ performs qualitatively better.
+
+Regarding the MISE of the Abramson estimator, rather than just the MSE(0), Abramson's choice to have a fixed $h$ in their definition of $h(X_i)$ is suboptimal for general observation points $y \in \R$. Consequently, the MISE of the Abramson estimator
 
 \section{Multivariate balloon estimators}
 % 5. Multivariate balloon estimators can perform better at high dimensions
@@ -116,15 +118,30 @@ For our balloon and sample smoothing estimator, we use a uniform density on the 
     K_{\textup{variable}}(\mathbf{x}) = \frac{\Gamma(d/2+1)}{\pi^{d/2}}\mathbbm{1}_{\vert\mathbf{x}\vert\leq1}(\mathbf{x})
 \end{equation}
 
-For simplicity, we choose $k \propto \sqrt{N}$ for the k-nearest neighbor component. Note that this still respects the asymptotic limit $k/n \rightarrow 0$ and $k\rightarrow \infty$. Our balloon estimate is found using \eqref{eq:balloon1} and our sample smoothing estimate using \eqref{eq:ss1}.
-
-Finally, we need to compute the MISE to compare our estimators. In higher dimensions, this becomes difficult if we use a direct numerical integration. We estimate the MISE using a Monte-Carlo integration method. 
+For simplicity, we choose $k \propto \sqrt{N}$ for the k-nearest neighbor component. Note that this still respects the asymptotic limit $k/n \rightarrow 0$ and $k\rightarrow \infty$. Our balloon estimate is found using \eqref{eq:balloon1} and our sample smoothing estimate using \eqref{eq:ss1}. Figure \ref{fig:1d-visual} shows our density estimates in the one-dimensional case. 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\linewidth]{}
-    \caption{Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=\linewidth]{images/1D_visual.png}
+    \caption{One-dimensional density estimates using fixed-width, balloon, and sample smoothing estimates.}
+    \label{fig:1d-visual}
+\end{figure}
+
+Finally, we need to compute the MISE to compare our estimators. In higher dimensions, this becomes difficult if we use a direct numerical integration. We estimate the MISE using a Monte-Carlo integration method. We first choose a domain $\Omega$ that includes most of the true density. For our application, we choose a hypercube with length $L$, where we set $L=5$.
+
+Then, we take $M$ sample points, $\mathbf{y}_i$ over that domain and estimate the MISE by 
+
+\begin{equation}\label{eq:monte-carlo-MISE}
+    \textup{MISE} \approx \frac{\textup{Vol}(\Omega)}{M}\sum_{i=1}^M \left(\hat{f}(\mathbf{y}_i) - f(\mathbf{y})\right)^2
+\end{equation}
+
+Figure \ref{fig:2d-visual} shows the squared error for each estimate in the two-dimensional case.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{images/2D_visual.png}
+    \caption{Squared error for fixed-width, balloon, and sample smoothing estimates in two dimensions. The estimates were constructed from 12,800 samples from a standard bivariate normal distribution. Note the gaps in the plots, due to the Monte Carlo method we use for estimating the MISE.}
+    \label{fig:2d-visual}
 \end{figure}
 
 Figure \ref{fig:MISE} shows the MISE for dimensions $d=1$ through $d=6$, along with an $N^{-4/(d+4)}$ line to show the minimum error asymptotic line. These numerical results support the conclusion that variable kernel density estimation only starts to improve over fixed-width KDE for higher dimensional data. In Figures \ref{fig:MISE-1}, the fixed width gaussian has a smaller MISE for all sample sizes compared to both the balloon estimate and the sample smoothing estimate. However, for $d\geq3$, we can see in Figures \ref{fig:MISE-3}-\ref{fig:MISE-6} that the variable with kernel density estimates are a marked improvement over the fixed-width estimate.
@@ -132,41 +149,41 @@ Figure \ref{fig:MISE} shows the MISE for dimensions $d=1$ through $d=6$, along w
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{images/updated_k_MISE_d=1.png}
+  \includegraphics[width=.8\linewidth]{images/MISE_d=1.png}
   \caption{d=1}
   \label{fig:MISE-1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{images/updated_k_MISE_d=2.png}
+  \includegraphics[width=.8\linewidth]{images/MISE_d=2.png}
   \caption{d=2}
   \label{fig:MISE-2}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{images/updated_k_MISE_d=3.png}
+  \includegraphics[width=.8\linewidth]{images/MISE_d=3.png}
   \caption{d=3}
   \label{fig:MISE-3}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{images/updated_k_MISE_d=4.png}
+  \includegraphics[width=.8\linewidth]{images/MISE_d=4.png}
   \caption{d=4}
   \label{fig:MISE-4}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{images/updated_k_MISE_d=5.png}
+  \includegraphics[width=.8\linewidth]{images/MISE_d=5.png}
   \caption{d=5}
   \label{fig:MISE-5}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=.8\linewidth]{images/updated_k_MISE_d=6.png}
+  \includegraphics[width=.8\linewidth]{images/MISE_d=6.png}
   \caption{d=6}
   \label{fig:MISE-6}
 \end{subfigure}
-\caption{Mean Integrated Squared Error computed via Monte Carlo estimate for fixed-width gaussian, balloon, and sample smoothing kernel density estimates.}
+\caption{Mean Integrated Squared Error computed via Monte Carlo estimate for fixed-width gaussian, balloon, and sample smoothing kernel density estimates. Each plot has the asymptotic $N^{-4/(d+4)}$ bound overlayed.}
 \label{fig:MISE}
 \end{figure}
 
