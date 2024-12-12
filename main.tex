@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\usepackage{amssymb}
+\usepackage{biblatex}
+\usepackage{xcolor}
+\addbibresource{ref.bib}
+
+\newcommand{\R}{\mathbb{R}}
+
+\title{Mathematical Statistics Final Project: Variable Kernel Density Estimation}
+\author{Nick DeFilippis and Paco Rilloraza}
+\date{12 December 2024}
+
+\begin{document}
+
+\maketitle
+
+The fundamental question of statistics is the following: given observations $X_1, \dots, X_n$, from what probability measure did they arise? Often our candidate distributions arise from a family of measures $\mathcal{P}$ that can be parameterized by a parameter set $\Theta \subseteq \R^k$, i.e., for each $\theta \in \Theta$, there is a measure $\mathbb{P}_\theta \in \mathcal{P}$ \cite{jnw}. Assuming that $\theta \neq \theta'$ implies that $\mathbb{P}_\theta \neq \mathbb{P}_{\theta'}$, the question of finding the measure that explains our observations is equivalent to finding the optimal parameter. 
+
+However, there are many cases in which $\mathcal{P}$ cannot be naturally parametrized. In this case, to find the explanatory $\mathbb{P} \in \mathcal{P}$, we must resort to the methods of nonparametric statistics. One such method is \textit{kernel density estimation} (KDE). KDE is a method for constructing an estimator $\hat{f}$ of a sufficiently smooth probability density $f$ from data. Such an estimator can be written as a sum of kernel functions centered at the data. Each of these kernel functions is a bump, and in most applications, the widths of these bumps are equal. In this setting, the figure of merit of the estimator is the \textit{mean-integrated square error} (MISE). In \cite{vkde}, Terrell and Scott study two proposals for KDEs with variable width, contrasting the MISEs of these variable KDEs with results from the fixed-width setting at varying numbers of samples $n$ and dimension $d$. 
+
+{\color{blue} Paco: finish this once rest of write-up is done. Conclude: most of the results are negative.}
+
+\section{Introduction}
+% 1. Introduction. Two types of VKDEs: h is a f'n of y or x. First promising for high dimensions, second for moderate sample sizes, but both bad
+
+The standard form of a nonparametric kernel density estimator with a fixed bandwidth is
+\begin{equation}\label{eq:fixed-width-kde}
+    \hat{f}(\mathbf{y}) = \frac{1}{nh^d}\sum_{i=1}^nK\left(\frac{\mathbf{X}_i-\mathbf{y}}{h}\right)
+\end{equation}
+
+where $\mathbf{X}_i$ is an i.i.d random variable drawn from $\mathbf{P}_\theta$. Terrell and Scott introduce the idea of varying the size of the bandwidth
+
+\section{Generalized kernels}
+% 2. Generalized kernels. Multivariate density estimators that are continuous and Gateaux (directionally) differentiable can be written as an average of the Gateaux derivatives. Asymptotically, these become generalized KDEs. KDEs are (1) weights centered at y that specify how x_i influence estimate at y and (2) mixture of densities centered at x_i. VKDEs generalize these.
+Noting that fixed-width KDEs receive the difference $\mathbf{X}_i-\mathbf{y}$ as an argument to $K$, the most broad generalization is an estimator of the form 
+\begin{equation}\label{eq:gen-kde}
+    \hat{f}(\mathbf{y}) = \frac{1}{n} \sum_{i=1}^n K_n(\mathbf{X}_i,\mathbf{y}) 
+\end{equation}
+for a suitable function $K_n$. To justify this, the authors provide Theorem 1, which states that for any multivariate density estimator $\hat{f}$ that is sufficiently smooth, we can write 
+\begin{equation}\label{eq:thm1}
+    \hat{f}(\mathbf{y}) = \frac{1}{n} \sum_{i=1}^n \nabla_{\mathbf{x}} \hat{f}(\mathbf{X}_i,\mathbf{y},\hat{F}_n), 
+\end{equation}
+where 
+
+\section{Univariate balloon estimators}
+% 3. Balloon estimators have no AMISE improvement
+
+\section{Sample smoothing estimators}
+% 4. Sample smoothing kernels have improved MISE for few samples, but no O(n^-8/9). Why? In the Gaussian data and uniform kernel case, the bias integral has some tail contributions yet unaccounted. There are different optimal bandwidths for n < 500 and n -> \infty. However a monotonicity condition in this result complicates analysis
+
+\section{Multivariate balloon estimators}
+% 5. Multivariate balloon estimators can perform better at high dimensions
+
+\section{Numerical experiment}
+
+Finally, we perform a numerical experiment comparing balloon and sample smoothing estimators with a fixed-width kernel density estimator. 
+
+Our control estimator is a fixed bandwidth estimator using a Gaussian kernel.
+
+We first generate $N$ samples from a standard $d$-dimensional multivariate Gaussian distribution.
+
+We then find the mean squared integrated error by
+
+
+
+\section{Conclusion}
+
+\printbibliography
+
+\end{document}
